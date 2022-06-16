@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "testingpost"
+tags: jekyll 
 ---
 
 # Welcome
