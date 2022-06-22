@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Image Recoloration"
+title:  "recoloration"
 date: 2022-06-22 13:15:36 -0400
 tag: supertest
 ---
