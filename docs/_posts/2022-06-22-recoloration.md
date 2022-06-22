@@ -2,7 +2,6 @@
 layout: post
 title:  "recoloration"
 date: 2022-06-22 13:15:36 -0400
-tag: supertest
 ---
 
 # Recoloration
