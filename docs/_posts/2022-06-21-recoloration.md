@@ -23,7 +23,7 @@ Since the results weren't *amazing* from the first part,  we then moved onto usi
 
 ## Side note: up until that point I had watched so many youtube videos on neural networks (an especially good one from 3Blue1Brown) but there was always some confusion as to how they *actually* worked. The only way to clear up that fogginess was to all of the calculus by hand. It was hard to appreciate the learning experience in the moment, but it was totally necessary. 
 
-# Thrid Version 
+# Third Version 
 
 Okay, so fast forward like two years later and I have to do a final project for my Pattern Recognition and Classification (AAI 646) course in grad school. My professors only instructions were to create a project using any of the machine learning algorithms we had learned over the course of the semester... so pretty broad. I decided that this would be the perfect opportunity to revist my black and white image recoloring project, because although I had completed it, there was *a* *lot* of room for improvement. 
 
