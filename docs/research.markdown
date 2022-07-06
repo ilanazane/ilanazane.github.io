@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Resarch
+title: Research
 permalink: /research/
 order: 2
 ---
