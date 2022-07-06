@@ -2,6 +2,7 @@
 layout: post
 title:  "Recoloring Black and White Images with a CNN"
 date: 2022-06-21 13:15:36 -0400
+categories: Projects
 ---
 
 # Intro
