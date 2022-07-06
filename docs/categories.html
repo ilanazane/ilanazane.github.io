@@ -2,6 +2,7 @@
 layout: page
 permalink: /categories/
 title: Categories
+order: 3 
 ---
 
 
@@ -22,3 +23,8 @@ title: Categories
   </div>
 {% endfor %}
 </div>
+
+{% assign sorted_pages = site.pages | sort:"order" %}
+{% for node in sorted_pages %}
+  <li><a href="{{node.url}}">{{node.title}}</a></li>
+{% endfor %}
