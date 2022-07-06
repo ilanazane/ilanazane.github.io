@@ -35,3 +35,16 @@ I worked on this project by myself for almost a month and created a new and impr
 
 The CNN consisted of 12 convolutional layers using Tensorflow and Keras that took images of size 256 pixels x 256 pixles as input. In order to extract features I had the model use a kernel size of 3x3 and a stride of 2-- i.e the images are analyzed by a 3x3 window to see only nine pixels of the image at a time and the stride parameter dictated that the window moved by 2 pixels each time. At the end of this process though I was left with an image that was about half the height and width of the original image. To counteract this I had an upsampling layer at the end of the model in order to increase the dimensions of the image to what it originall was to prevent loss of information. 
 
+
+<div class="post-categories">
+  {% if post %}
+    {% assign categories = post.categories %}
+  {% else %}
+    {% assign categories = page.categories %}
+  {% endif %}
+  {% for category in categories %}
+  <a href="{{site.baseurl}}/categories/#{{category|slugize}}">{{category}}</a>
+  {% unless forloop.last %}&nbsp;{% endunless %}
+  {% endfor %}
+</div>
+
