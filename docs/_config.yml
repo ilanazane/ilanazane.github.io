@@ -31,10 +31,12 @@ github_username:  ilanazane
 instagram_username: lanadelzane
 
 # Build settings
-theme: minimal-mistakes-jekyll
+remote_theme: pages-themes/minimal@v0.2.0
+#heme: minimal-mistakes-jekyll
 minimal_mistakes_skin: "neon" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 plugins:
   - jekyll-feed
+  - jekyll-remote-theme # add this line to the plugins list if you already have one
  gems:
   - jekyll-mathematical
 
