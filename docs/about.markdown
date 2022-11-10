@@ -5,13 +5,6 @@ permalink: /about/
 order: 1
 ---
 
-## Eduation 
-
-Ilana Zane has her B.S. in computer science with a minor in french literature from Rutgers, New Brunswick. She is currently at Stevens Institute of Technology pursuing her M.S. in Applied AI and Mechanical Engineering-- which means I take a lot of machine learning classes, some robotics classes and when the two overlap I am super happy :) 
-
-## Personal Intersts 
-
-Ilana's hobbies include 3D Printing ( she has an Ender 3V2 which has been amazing), bullet journaling, gardening, and playing tennis. 
-
+Hi, I'm Ilana! I have my masters in AI & Robotics and my bachelors in Computer Science. This blog is dedictated to all of my hobbies and interests which are ... a lot. Hope you enjoy reading everything from personal machine learning projects to knitting and everything in between :) 
 
 
