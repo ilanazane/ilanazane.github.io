@@ -3,7 +3,9 @@ layout: post
 title: "Introduction to Autoencoders" 
 date: 2022-11-17
 ---
-This week for my deep learning class we went over autoencoders. An autoencoder is a type of neural network that is used to learn different features of unlabeled data. The network has two main parts: an encoder function and a decoder function that reproduces a reconstruction. llallalal
+This week for my deep learning class we went over autoencoders. An autoencoder is a type of neural network that is used to learn different features of unlabeled data. The network has two main parts: an encoder function and a decoder function that reproduces a reconstruction. 
+
+A classical image autoencoder, which is coded below takes an image, maps it to a latent vector space via the encoder function, and then decodes it back to an output with the same dimensions as the original original image, via the decoder function. The network is then trained using the same images as in the input as target data. This means that the autoencoder learns to reconstruct the original inputs. When you impose certain constraints on the output of the encoder, you can get the autoencoder to basically learn interesting latent representations of the data. More commonly though, the enocder is constrained to be low dimensional and sparse-- this causes the encoder to act as a way to compress the input data into fewer bits of information. 
 
 ```python
 from keras.layers import Dense,Conv2D,MaxPooling2D,UpSampling2D
