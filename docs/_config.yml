@@ -35,6 +35,7 @@ theme: minima
 plugins:
  - jekyll-feed
  - jekyll-spaceship 
+ - jekyll-seo-tag
 #gems:
  #- jekyll-mathematical
 
