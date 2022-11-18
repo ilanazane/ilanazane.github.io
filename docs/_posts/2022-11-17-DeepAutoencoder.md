@@ -3,7 +3,7 @@ layout: post
 title: "Introduction to Autoencoders" 
 date: 2022-11-17
 ---
-This week for my deep learning class we went over autoencoders. An autoencoder is a type of neural network that is used to learn different features of unlabeled data. The network has two main parts: an encoder function and a decoder function that reproduces a reconstruction. 
+This week for my deep learning class we went over autoencoders. An autoencoder is a type of neural network that is used to learn different features of unlabeled data. The network has two main parts: an encoder function and a decoder function that reproduces a reconstruction. llallalal
 
 ```python
 from keras.layers import Dense,Conv2D,MaxPooling2D,UpSampling2D
