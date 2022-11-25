@@ -8,6 +8,7 @@ This week for my deep learning class we went over autoencoders. An autoencoder i
 A classical image autoencoder, which is coded below takes an image, maps it to a latent vector space via the encoder function, and then decodes it back to an output with the same dimensions as the original original image, via the decoder function. The network is then trained using the same images as in the input as target data. This means that the autoencoder learns to reconstruct the original inputs. When you impose certain constraints on the output of the encoder, you can get the autoencoder to basically learn interesting latent representations of the data. More commonly though, the enocder is constrained to be low dimensional and sparse-- this causes the encoder to act as a way to compress the input data into fewer bits of information. 
 
 ```python
+# import statements 
 from keras.layers import Dense,Conv2D,MaxPooling2D,UpSampling2D
 from keras import Input, Model
 from keras.datasets import mnist
@@ -21,11 +22,11 @@ import matplotlib.pyplot as plt
 ```python
 encoding_dim = 15 
 input_img = Input(shape=(784,))
-# encoded representation of input
+# encoded representation
 encoded = Dense(encoding_dim, activation='relu')(input_img)
-# decoded representation of code 
+# decoded representation 
 decoded = Dense(784, activation='sigmoid')(encoded)
-# Model which take input image and shows decoded images
+# model takes image as input and outputs decoded image 
 autoencoder = Model(input_img, decoded)
 ```
 
@@ -37,9 +38,9 @@ autoencoder = Model(input_img, decoded)
 ```python
 # This model shows encoded images
 encoder = Model(input_img, encoded)
-# Creating a decoder model
+# create a decoder model
 encoded_input = Input(shape=(encoding_dim,))
-# last layer of the autoencoder model
+# last layer of autoencoder model
 decoder_layer = autoencoder.layers[-1]
 # decoder model
 decoder = Model(encoded_input, decoder_layer(encoded_input))
@@ -53,6 +54,7 @@ autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
 
 
 ```python
+# training and testing data 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train = x_train.astype('float32') / 255.
 x_test = x_test.astype('float32') / 255.
@@ -86,6 +88,7 @@ plt.imshow(x_train[0].reshape(28,28))
 
 
 ```python
+# fit the model 
 autoencoder.fit(x_train, x_train,
                 epochs=15,
                 batch_size=256,
@@ -173,18 +176,20 @@ from keras.models import Sequential
 
 model = Sequential()
 
-# encoder network
+# create CNN 
+# create the encoder network
 model.add(Conv2D(30, 3, activation= 'relu', padding='same', input_shape = (28,28,1)))
 model.add(MaxPooling2D(2, padding= 'same'))
 model.add(Conv2D(15, 3, activation= 'relu', padding='same'))
 model.add(MaxPooling2D(2, padding= 'same'))
 
-#decoder network
+# create the decoder network
 model.add(Conv2D(15, 3, activation= 'relu', padding='same'))
 model.add(UpSampling2D(2))
 model.add(Conv2D(30, 3, activation= 'relu', padding='same'))
 model.add(UpSampling2D(2))
-model.add(Conv2D(1,3,activation='sigmoid', padding= 'same')) # output layer
+# output layer
+model.add(Conv2D(1,3,activation='sigmoid', padding= 'same')) 
 model.compile(optimizer= 'adam', loss = 'binary_crossentropy')
 model.summary()
 ```
@@ -354,7 +359,7 @@ for i in range(n):
 plt.show()
 ```
 
-
+# we can see from the reconstruction images that there is a lot of noise. Autoencoders that have noisy 
     
 ![image]({{site.url}}/assets/images/DeepAutoencoder_files/DeepAutoencoder_18_0.png)
     
