@@ -23,5 +23,5 @@ Tesla spends virtually nothing on marketing, that has been all on Elon-- Tesla i
 Last, but not least, I think we will see a change in our social media habits. There will definitely be a shift away from Twitter. I'm not sure whether or not Mastodon will be the new Twitter (I don't even use Twitter anymore), but I think it'll be healthy for people to get their news from somewhere else for a change. Also the Biden Administration is under pressure to put new restrictions on TikTok-- already a few states have put restrictions on having TikTok on government devices. A ban of TikTok outright is highly unlikely, but I think we will see some changes in this area.
  
 <h1>Conclusions</h1>
-This has been a busy year for Tech and AI, I feel like ten years worth of development happened in the last few months of 2022. I am excited to see what 2023 holds and will try to not be insanely overwhelmed. Happy New Year!
+This has been a busy year for Tech and AI, I feel like ten years worth of development happened in the last few months of 2022. I am excited to see what 2023 holds and will try to not be insanely overwhelmed. Happy New Year!!! 
 
