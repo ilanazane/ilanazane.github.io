@@ -34,6 +34,7 @@ plugins:
  - jekyll-feed
  - jekyll-spaceship 
  - jekyll-seo-tag
+ - jekyll-sitemap
 #gems:
  #- jekyll-mathematical
 
