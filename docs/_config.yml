@@ -23,7 +23,7 @@ email: ilanazane@comcast.net
 description: >- # this means to ignore newlines until "baseurl:"
   A blog about AI and other interests 
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://ilanazane.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  ilanazane
 instagram_username: lanadelzane
 
