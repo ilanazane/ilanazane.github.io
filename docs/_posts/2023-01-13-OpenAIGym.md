@@ -46,7 +46,7 @@ Thank you, ChatGPT for this cute poem! Although, I'm not really sure how I feel 
 I decided to tackle some reinforcement learning exercises that I found in my textbook, and think I might make this a several part series. Although I have a summer’s worth of reinforcement learning experience, I kind of jumped right into it and skipped over all of the basics. It’s worthwhile to formally introduce myself to some of these concepts. So let’s get into it: 
 
 <div class=info>
-First, I’m not sure if anyone else has this problem, but I could spend hours trying to figure out why certain packages aren’t installing on my local computer. I think from now on if I have to use anything besides numpy, I’ll go to Google Colab.
+<i class="fa fa-info-circle"></i> First, I’m not sure if anyone else has this problem, but I could spend hours trying to figure out why certain packages aren’t installing on my local computer. I think from now on if I have to use anything besides numpy, I’ll go to Google Colab.
 </div><br>
 
 In this first part, we make sure that all of the required libraries are installed and up to date, make sure our plots will be nicely formatted, animations can be made and figures saved—  I’m in a rhyming mood :) 
@@ -239,7 +239,7 @@ Just as an example, let’s accelerate the cart to the left by setting action  =
     <dd>This provides extra information for training or debugging.</dd>
 </dl>
 
-<div class='info'> I am imagining that episodes in this context are akin to epochs. After going through all of the steps per epoch, the environment is reset and the agent’s reward is set to 0. </div><br>
+<div class='info'><i class="fa fa-info-circle"></i> I am imagining that episodes in this context are akin to epochs. After going through all of the steps per epoch, the environment is reset and the agent’s reward is set to 0. </div><br>
 
 ```python
 action = 0
