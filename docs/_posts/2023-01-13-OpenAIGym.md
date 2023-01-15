@@ -23,7 +23,7 @@ div.info {
  </style>
 
 
-<em>Reinforcement learning,<br>
+<center><em>Reinforcement learning,<br>
     A path to machine control,<br>
     Through trial and error,<br>
     Optimizing the goal.<br><br>
@@ -39,7 +39,7 @@ div.info {
     To make our algorithms thrive,<br> 
     Through reinforcement learning,<br> 
     We'll make machines come alive.<br>
-</em>
+</em></center><br>
 
 Thank you, ChatGPT for this cute poem! Although, I'm not really sure how I feel about the last line haha. 
 
