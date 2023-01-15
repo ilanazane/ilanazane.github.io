@@ -4,6 +4,24 @@ title: "Learning to use OpenAI Gym"
 date: 2023-01-13
 --- 
 
+<style>
+div.warn {    
+    background-color: #fcf2f2;
+    border-color: #dFb5b4;
+    border-left: 5px solid #dfb5b4;
+    padding: 0.5em;
+    }
+ </style>
+
+ <style>
+div.info {    
+    background-color:#D6EAF8;
+    border-color: #3498DB;
+    border-left: 5px solid #3498DB;
+    padding: 0.5em;
+    }
+ </style>
+
 
 <em>Reinforcement learning,<br>
     A path to machine control,<br>
@@ -27,8 +45,9 @@ Thank you, ChatGPT for this cute poem! Although, I'm not really sure how I feel 
 
 I decided to tackle some reinforcement learning exercises that I found in my textbook, and think I might make this a several part series. Although I have a summer’s worth of reinforcement learning experience, I kind of jumped right into it and skipped over all of the basics. It’s worthwhile to formally introduce myself to some of these concepts. So let’s get into it: 
 
+<div class=info>
 First, I’m not sure if anyone else has this problem, but I could spend hours trying to figure out why certain packages aren’t installing on my local computer. I think from now on if I have to use anything besides numpy, I’ll go to Google Colab.
-
+</div><br>
 
 In this first part, we make sure that all of the required libraries are installed and up to date, make sure our plots will be nicely formatted, animations can be made and figures saved—  I’m in a rhyming mood :) 
 
@@ -104,13 +123,24 @@ def save_fig(fig_id, tight_layout=True, fig_extension="png", resolution=300):
 ```python
 import gym
 ```
-First we are going to create an environment with MAKE():  
+First we are going to create an environment with `make()`:  
 For this example we are going to use the CartPole environment. This is a 2D simulation with a pole balanced on a cart. 
 
 
 ```python
 env = gym.make('CartPole-v1',render_mode="rgb_array")
 ```
+Initialize the environment using `reset()`. Returned is the first set of observations. For the CartPole environment, the observations of are the following four: 
+
+<ol>
+ <li>Cart’s horizontal position (0.0 = center) </li>
+ <li>Cart’s velocity (>0 = right)</li>
+ <li>Pole’s angle (0.0 = vertical) </li>
+ <li>Pole’s angular velocity (>0 = clockwise)</li>
+</ol>
+
+![image]({{site.url}}/assets/images/OpenAIGym_files/diagram.png){: width="500" } 
+
 
 
 ```python
@@ -140,6 +170,7 @@ except ImportError:
   pass
 ```
 
+Use the `render()` function to show the environment. 
 
 ```python
 img = env.render()
@@ -178,6 +209,8 @@ plt.show()
 ![image]({{site.url}}/assets/images/OpenAIGym_files/OpenAIGym_11_0.png)
     
 
+`env.action_space()` shows which actions are possible in the environment.
+<em>Discrete(2)</em> means that there are two possible actions that the agent can take: 0 (accelerating left) or 1 (accelerating right). 
 
 
 ```python
@@ -190,7 +223,23 @@ env.action_space
   <blockquote> Discrete(2) </blockquote>
 
 
+Just as an example, let’s accelerate the cart to the left by setting action  = 0. The `step()` function executes the action and returns four values: 
 
+<dl>
+  <dt><b>obs</b></dt>
+    <dd>The newest observation. If we compare the two angular velocities <em>obs[2]</em> we will see that it increases, which means the pole is moving to the right, as we expect it to! 
+    </dd>
+  <dt><b>reward</b></dt>
+    <dd>We want the episode to run for as long as possible, so we set the reward to 1 at each step. 
+    </dd>
+  <dt><b>done</b></dt>
+    <dd>When the episode is over, done will be equal to TRUE. This will happen either when the angle of the pole falls below 0 (which means it falls off the screen) or we reach the end of the 200 steps, which means we have won. 
+    </dd>
+  <dt><b>info</b></dt>
+    <dd>This provides extra information for training or debugging.</dd>
+</dl>
+
+<div class='info'> I am imagining that episodes in this context are akin to epochs. After going through all of the steps per epoch, the environment is reset and the agent’s reward is set to 0. </div><br>
 
 ```python
 action = 0
@@ -244,11 +293,7 @@ print(info)
 if done:
   obs = env.reset()
 ```
-
-
-```python
-
-```
+To demonstrate how this works all together, let’s create a simple hard-coded policy that will accelerate the cart to the left when the pole is leaning towards and accelerate it to the right when the pole is leaning right. 
 
 # Creating a Simple-Hardcoded Policy
 
@@ -295,6 +340,8 @@ for episode in range(500):
 print('mean',np.mean(totals) ,np.std(totals),np.min(totals),np.max(totals))
 
 ```
+The max value indicates that out of 500 tries, the pole managed to stay upright for 72 consecutive steps. 
+
 
    <blockquote>  mean: 42.992 <br>
                  std: 8.717105941767601 <br>
@@ -302,6 +349,7 @@ print('mean',np.mean(totals) ,np.std(totals),np.min(totals),np.max(totals))
                  max: 72.0</blockquote>
 
 
+# Visualization
 
 ```python
 env.np_random.random(32)
@@ -325,7 +373,7 @@ for step in range(200):
     break
 ```
 
-# Visualization
+
 
 
 ```python
@@ -2619,4 +2667,13 @@ Kf0d5wf8q3x1+JcAAAAASUVORK5CYII=\
     }, 0);
   })()
 </script>
+<br>
+
+We can see from the animation that over the course of one episode the pole increasingly tilts more to the left and right. Eventually it would fall out of frame. 
+
+Let’s try using a neural network policy in the next segment (which will prob be in a few days)! Byeee. 
+
+
+
+
 
