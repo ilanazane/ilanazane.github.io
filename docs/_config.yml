@@ -33,6 +33,7 @@ theme: minima
 plugins:
  - jekyll-feed
  - jekyll-sitemap
+ - jekyll-jupyter
 #gems:
  #- jekyll-mathematical
 

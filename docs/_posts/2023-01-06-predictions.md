@@ -6,6 +6,7 @@ date: 2023-01-06
 ![image]({{site.url}}/assets/images/Predict_files/Banner.png)
  
 Inspired by the Hard Fork podcast, I have decided to make my tech predictions for 2023. There was a lot that happened this year, especially the last few months of 2022, it was hard to narrow down which topics I wanted to talk about. Here we go!
+
  
 <h1> ChatGPT </h1>
 How can I not talk about this... it's all anyone is talking about. ChatGPT, released by OpenAI at the end of November, is bound to cause issues for students K-12. I think in 2023 we are definitely going to see a lot of conversations from parents and educators around how students are going to use ChatGPT in classrooms and at home on homework assignments. A lot of students have already been using it to write papers and summarize books. But the concept of using the internet for homework help is not new. I remember in high school Cliff Notes was my lifeline in English classes-- it summarized almost every book chapter by chapter within an in depth analysis. However, when everyone uses the same resource you get the same answers and English teachers have caught on pretty quickly. I think the same will happen with ChatGPT-- students will use it, and will likely all ask it the same question. And let's face it: if they are using ChatGPT for homework, they are likely not in the mood to be creative and will ALL ask the same query and will get the same answer from ChatGPT. I think this will be talked about, but won't be the disruptor that we think it is.

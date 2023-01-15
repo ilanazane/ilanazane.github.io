@@ -42,3 +42,4 @@ Wherever there an image is being rendered in your post use the following line to
 
 Run it in your local host and yay you have code blocks from your jn file on github pages! 
 
+
