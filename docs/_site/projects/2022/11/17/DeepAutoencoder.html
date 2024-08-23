@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Introduction to Autoencoders | Ilana Zane</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Introduction to Autoencoders" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This week for my deep learning class we went over autoencoders. An autoencoder is a type of neural network that is used to learn different features of unlabeled data. The network has two main parts: an encoder function and a decoder function that reproduces a reconstruction." />
+<meta property="og:description" content="This week for my deep learning class we went over autoencoders. An autoencoder is a type of neural network that is used to learn different features of unlabeled data. The network has two main parts: an encoder function and a decoder function that reproduces a reconstruction." />
+<link rel="canonical" href="http://localhost:4000/projects/2022/11/17/DeepAutoencoder.html" />
+<meta property="og:url" content="http://localhost:4000/projects/2022/11/17/DeepAutoencoder.html" />
+<meta property="og:site_name" content="Ilana Zane" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-11-17T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Introduction to Autoencoders" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-11-17T00:00:00-05:00","datePublished":"2022-11-17T00:00:00-05:00","description":"This week for my deep learning class we went over autoencoders. An autoencoder is a type of neural network that is used to learn different features of unlabeled data. The network has two main parts: an encoder function and a decoder function that reproduces a reconstruction.","headline":"Introduction to Autoencoders","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/2022/11/17/DeepAutoencoder.html"},"url":"http://localhost:4000/projects/2022/11/17/DeepAutoencoder.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Ilana Zane" /><meta name="google-site-verification" content="-U80l7j-jWyXzli0lOaeIKs8E0K3Rs2hUzeXIwJeoaw" />
+  </head>
+
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script><body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/">Ilana Zane</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a><a class="page-link" href="/research/">Research</a></div>
+        </nav><img src="/assets/images/banner.png"/>
+    </div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Introduction to Autoencoders</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2022-11-17T00:00:00-05:00" itemprop="datePublished">Nov 17, 2022
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This week for my deep learning class we went over autoencoders. An autoencoder is a type of neural network that is used to learn different features of unlabeled data. The network has two main parts: an encoder function and a decoder function that reproduces a reconstruction.</p>
+
+<p>A classical image autoencoder, which is coded below takes an image, maps it to a latent vector space via the encoder function, and then decodes it back to an output with the same dimensions as the original original image, via the decoder function. The network is then trained using the same images as in the input as target data. This means that the autoencoder learns to reconstruct the original inputs. When you impose certain constraints on the output of the encoder, you can get the autoencoder to basically learn interesting latent representations of the data. More commonly though, the enocder is constrained to be low dimensional and sparse– this causes the encoder to act as a way to compress the input data into fewer bits of information.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># import statements 
+</span><span class="kn">from</span> <span class="n">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span><span class="n">Conv2D</span><span class="p">,</span><span class="n">MaxPooling2D</span><span class="p">,</span><span class="n">UpSampling2D</span>
+<span class="kn">from</span> <span class="n">keras</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="n">keras.datasets</span> <span class="kn">import</span> <span class="n">mnist</span>
+<span class="kn">from</span> <span class="n">keras.datasets</span> <span class="kn">import</span> <span class="n">fashion_mnist</span>
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="n">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</code></pre></div></div>
+
+<h1 id="normal-autoencoder">Normal Autoencoder</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">encoding_dim</span> <span class="o">=</span> <span class="mi">15</span> 
+<span class="n">input_img</span> <span class="o">=</span> <span class="nc">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">784</span><span class="p">,))</span>
+<span class="c1"># encoded representation
+</span><span class="n">encoded</span> <span class="o">=</span> <span class="nc">Dense</span><span class="p">(</span><span class="n">encoding_dim</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="sh">'</span><span class="s">relu</span><span class="sh">'</span><span class="p">)(</span><span class="n">input_img</span><span class="p">)</span>
+<span class="c1"># decoded representation 
+</span><span class="n">decoded</span> <span class="o">=</span> <span class="nc">Dense</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="sh">'</span><span class="s">sigmoid</span><span class="sh">'</span><span class="p">)(</span><span class="n">encoded</span><span class="p">)</span>
+<span class="c1"># model takes image as input and outputs decoded image 
+</span><span class="n">autoencoder</span> <span class="o">=</span> <span class="nc">Model</span><span class="p">(</span><span class="n">input_img</span><span class="p">,</span> <span class="n">decoded</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2022-11-16 12:46:22.257812: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This model shows encoded images
+</span><span class="n">encoder</span> <span class="o">=</span> <span class="nc">Model</span><span class="p">(</span><span class="n">input_img</span><span class="p">,</span> <span class="n">encoded</span><span class="p">)</span>
+<span class="c1"># create a decoder model
+</span><span class="n">encoded_input</span> <span class="o">=</span> <span class="nc">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">encoding_dim</span><span class="p">,))</span>
+<span class="c1"># last layer of autoencoder model
+</span><span class="n">decoder_layer</span> <span class="o">=</span> <span class="n">autoencoder</span><span class="p">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1"># decoder model
+</span><span class="n">decoder</span> <span class="o">=</span> <span class="nc">Model</span><span class="p">(</span><span class="n">encoded_input</span><span class="p">,</span> <span class="nf">decoder_layer</span><span class="p">(</span><span class="n">encoded_input</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">autoencoder</span><span class="p">.</span><span class="nf">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="sh">'</span><span class="s">adam</span><span class="sh">'</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="sh">'</span><span class="s">binary_crossentropy</span><span class="sh">'</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># training and testing data 
+</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="p">.</span><span class="nf">load_data</span><span class="p">()</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">.</span><span class="nf">astype</span><span class="p">(</span><span class="sh">'</span><span class="s">float32</span><span class="sh">'</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">.</span><span class="nf">astype</span><span class="p">(</span><span class="sh">'</span><span class="s">float32</span><span class="sh">'</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">.</span><span class="nf">reshape</span><span class="p">((</span><span class="nf">len</span><span class="p">(</span><span class="n">x_train</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="nf">prod</span><span class="p">(</span><span class="n">x_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])))</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">.</span><span class="nf">reshape</span><span class="p">((</span><span class="nf">len</span><span class="p">(</span><span class="n">x_test</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="nf">prod</span><span class="p">(</span><span class="n">x_test</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])))</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">x_train</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">x_test</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(60000, 784)
+(10000, 784)
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">x_train</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nf">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">))</span>
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.image.AxesImage at 0x12520b370&gt;
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/images/DeepAutoencoder_files/DeepAutoencoder_6_1.png" alt="image" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># fit the model 
+</span><span class="n">autoencoder</span><span class="p">.</span><span class="nf">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span>
+                <span class="n">epochs</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+                <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">x_test</span><span class="p">))</span>
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Epoch 1/15
+235/235 [==============================] - 2s 6ms/step - loss: 0.3108 - val_loss: 0.2187
+Epoch 2/15
+235/235 [==============================] - 2s 7ms/step - loss: 0.1966 - val_loss: 0.1805
+Epoch 3/15
+235/235 [==============================] - 2s 7ms/step - loss: 0.1725 - val_loss: 0.1641
+Epoch 4/15
+235/235 [==============================] - 2s 7ms/step - loss: 0.1597 - val_loss: 0.1538
+Epoch 5/15
+235/235 [==============================] - 1s 6ms/step - loss: 0.1514 - val_loss: 0.1472
+Epoch 6/15
+235/235 [==============================] - 1s 6ms/step - loss: 0.1465 - val_loss: 0.1436
+Epoch 7/15
+235/235 [==============================] - 2s 7ms/step - loss: 0.1436 - val_loss: 0.1412
+Epoch 8/15
+235/235 [==============================] - 2s 7ms/step - loss: 0.1415 - val_loss: 0.1394
+Epoch 9/15
+235/235 [==============================] - 1s 6ms/step - loss: 0.1398 - val_loss: 0.1379
+Epoch 10/15
+235/235 [==============================] - 2s 8ms/step - loss: 0.1383 - val_loss: 0.1364
+Epoch 11/15
+235/235 [==============================] - 2s 9ms/step - loss: 0.1371 - val_loss: 0.1353
+Epoch 12/15
+235/235 [==============================] - 2s 6ms/step - loss: 0.1362 - val_loss: 0.1344
+Epoch 13/15
+235/235 [==============================] - 2s 7ms/step - loss: 0.1354 - val_loss: 0.1337
+Epoch 14/15
+235/235 [==============================] - 2s 8ms/step - loss: 0.1348 - val_loss: 0.1332
+Epoch 15/15
+235/235 [==============================] - 2s 7ms/step - loss: 0.1343 - val_loss: 0.1327
+
+
+
+
+
+&lt;keras.callbacks.History at 0x1252e6d60&gt;
+</code></pre></div></div>
+
+<h1 id="normal-autoencoder-results">Normal Autoencoder Results</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">encoded_img</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">.</span><span class="nf">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+<span class="n">decoded_img</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">.</span><span class="nf">predict</span><span class="p">(</span><span class="n">encoded_img</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="c1"># Display original
+</span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="nf">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">x_test</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="nf">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">gray</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_xaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_yaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="c1"># Display reconstruction
+</span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="nf">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">decoded_img</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="nf">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">gray</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_xaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_yaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/images/DeepAutoencoder_files/DeepAutoencoder_9_0.png" alt="image" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+</code></pre></div></div>
+
+<h1 id="deep-autoencoder">Deep Autoencoder</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">model</span> <span class="o">=</span> <span class="nc">Sequential</span><span class="p">()</span>
+
+<span class="c1"># create CNN 
+# create the encoder network
+</span><span class="n">model</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="nc">Conv2D</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span> <span class="sh">'</span><span class="s">relu</span><span class="sh">'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="sh">'</span><span class="s">same</span><span class="sh">'</span><span class="p">,</span> <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">1</span><span class="p">)))</span>
+<span class="n">model</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="nc">MaxPooling2D</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span> <span class="sh">'</span><span class="s">same</span><span class="sh">'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="nc">Conv2D</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span> <span class="sh">'</span><span class="s">relu</span><span class="sh">'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="sh">'</span><span class="s">same</span><span class="sh">'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="nc">MaxPooling2D</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span> <span class="sh">'</span><span class="s">same</span><span class="sh">'</span><span class="p">))</span>
+
+<span class="c1"># create the decoder network
+</span><span class="n">model</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="nc">Conv2D</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span> <span class="sh">'</span><span class="s">relu</span><span class="sh">'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="sh">'</span><span class="s">same</span><span class="sh">'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="nc">UpSampling2D</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="nc">Conv2D</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span> <span class="sh">'</span><span class="s">relu</span><span class="sh">'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="sh">'</span><span class="s">same</span><span class="sh">'</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="nc">UpSampling2D</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="c1"># output layer
+</span><span class="n">model</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="nc">Conv2D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="sh">'</span><span class="s">sigmoid</span><span class="sh">'</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span> <span class="sh">'</span><span class="s">same</span><span class="sh">'</span><span class="p">))</span> 
+<span class="n">model</span><span class="p">.</span><span class="nf">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span> <span class="sh">'</span><span class="s">adam</span><span class="sh">'</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="sh">'</span><span class="s">binary_crossentropy</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">model</span><span class="p">.</span><span class="nf">summary</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ conv2d (Conv2D)             (None, 28, 28, 30)        300       
+                                                                 
+ max_pooling2d (MaxPooling2D  (None, 14, 14, 30)       0         
+ )                                                               
+                                                                 
+ conv2d_1 (Conv2D)           (None, 14, 14, 15)        4065      
+                                                                 
+ max_pooling2d_1 (MaxPooling  (None, 7, 7, 15)         0         
+ 2D)                                                             
+                                                                 
+ conv2d_2 (Conv2D)           (None, 7, 7, 15)          2040      
+                                                                 
+ up_sampling2d (UpSampling2D  (None, 14, 14, 15)       0         
+ )                                                               
+                                                                 
+ conv2d_3 (Conv2D)           (None, 14, 14, 30)        4080      
+                                                                 
+ up_sampling2d_1 (UpSampling  (None, 28, 28, 30)       0         
+ 2D)                                                             
+                                                                 
+ conv2d_4 (Conv2D)           (None, 28, 28, 1)         271       
+                                                                 
+=================================================================
+Total params: 10,756
+Trainable params: 10,756
+Non-trainable params: 0
+_________________________________________________________________
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="p">.</span><span class="nf">load_data</span><span class="p">()</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">.</span><span class="nf">astype</span><span class="p">(</span><span class="sh">'</span><span class="s">float32</span><span class="sh">'</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">.</span><span class="nf">astype</span><span class="p">(</span><span class="sh">'</span><span class="s">float32</span><span class="sh">'</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">reshape</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">x_train</span><span class="p">),</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">reshape</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">x_test</span><span class="p">),</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">model</span><span class="p">.</span><span class="nf">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span>
+                <span class="n">epochs</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+                <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">x_test</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Epoch 1/15
+469/469 [==============================] - 79s 168ms/step - loss: 0.1290 - val_loss: 0.0792
+Epoch 2/15
+469/469 [==============================] - 80s 171ms/step - loss: 0.0775 - val_loss: 0.0748
+Epoch 3/15
+469/469 [==============================] - 79s 169ms/step - loss: 0.0746 - val_loss: 0.0730
+Epoch 4/15
+469/469 [==============================] - 77s 165ms/step - loss: 0.0730 - val_loss: 0.0720
+Epoch 5/15
+469/469 [==============================] - 90s 192ms/step - loss: 0.0721 - val_loss: 0.0710
+Epoch 6/15
+469/469 [==============================] - 79s 168ms/step - loss: 0.0713 - val_loss: 0.0704
+Epoch 7/15
+469/469 [==============================] - 72s 153ms/step - loss: 0.0707 - val_loss: 0.0699
+Epoch 8/15
+469/469 [==============================] - 71s 151ms/step - loss: 0.0703 - val_loss: 0.0694
+Epoch 9/15
+469/469 [==============================] - 85s 181ms/step - loss: 0.0698 - val_loss: 0.0692
+Epoch 10/15
+469/469 [==============================] - 74s 158ms/step - loss: 0.0695 - val_loss: 0.0687
+Epoch 11/15
+469/469 [==============================] - 73s 155ms/step - loss: 0.0692 - val_loss: 0.0691
+Epoch 12/15
+469/469 [==============================] - 77s 164ms/step - loss: 0.0689 - val_loss: 0.0683
+Epoch 13/15
+469/469 [==============================] - 68s 146ms/step - loss: 0.0687 - val_loss: 0.0680
+Epoch 14/15
+469/469 [==============================] - 68s 144ms/step - loss: 0.0684 - val_loss: 0.0678
+Epoch 15/15
+469/469 [==============================] - 68s 144ms/step - loss: 0.0682 - val_loss: 0.0676
+
+
+
+
+
+&lt;keras.callbacks.History at 0x126034d30&gt;
+</code></pre></div></div>
+
+<h1 id="deep-autoencoder-results">Deep Autoencoder Results</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="nf">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">n</span><span class="o">=</span><span class="mi">10</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="c1"># Display original
+</span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="nf">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">x_test</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="nf">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">gray</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_xaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_yaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="c1"># Display reconstruction
+</span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="nf">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">pred</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="nf">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">gray</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_xaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_yaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/images/DeepAutoencoder_files/DeepAutoencoder_15_0.png" alt="image" /></p>
+
+<h1 id="test-with-anomoly-images">Test with Anomoly Images</h1>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#load fashion data 
+</span><span class="p">(</span><span class="n">fx_train</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="p">(</span><span class="n">fx_test</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">fashion_mnist</span><span class="p">.</span><span class="nf">load_data</span><span class="p">()</span>
+<span class="c1">#preprocess data
+</span><span class="n">fx_train</span> <span class="o">=</span> <span class="n">fx_train</span><span class="p">.</span><span class="nf">astype</span><span class="p">(</span><span class="sh">'</span><span class="s">float32</span><span class="sh">'</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+<span class="n">fx_test</span> <span class="o">=</span> <span class="n">fx_test</span><span class="p">.</span><span class="nf">astype</span><span class="p">(</span><span class="sh">'</span><span class="s">float32</span><span class="sh">'</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+<span class="n">fx_train</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">reshape</span><span class="p">(</span><span class="n">fx_train</span><span class="p">,</span> <span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">fx_train</span><span class="p">),</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">fx_test</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">reshape</span><span class="p">(</span><span class="n">fx_test</span><span class="p">,</span> <span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">fx_test</span><span class="p">),</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="c1">#show the data 
+</span><span class="n">plt</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">fx_train</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nf">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">))</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">fx_train</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">fx_test</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+
+
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(60000, 28, 28, 1)
+(10000, 28, 28, 1)
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/images/DeepAutoencoder_files/DeepAutoencoder_17_1.png" alt="image" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="nf">predict</span><span class="p">(</span><span class="n">fx_test</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">n</span><span class="o">=</span><span class="mi">10</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="c1"># Display original
+</span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="nf">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">fx_test</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="nf">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">gray</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_xaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_yaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="c1"># Display reconstruction
+</span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="nf">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">imshow</span><span class="p">(</span><span class="n">pred</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="nf">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">gray</span><span class="p">()</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_xaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">.</span><span class="nf">get_yaxis</span><span class="p">().</span><span class="nf">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h1 id="we-can-see-from-the-reconstruction-images-that-there-is-a-lot-of-noise-autoencoders-that-have-noisy">we can see from the reconstruction images that there is a lot of noise. Autoencoders that have noisy</h1>
+
+<p><img src="http://localhost:4000/assets/images/DeepAutoencoder_files/DeepAutoencoder_18_0.png" alt="image" /></p>
+
+
+  </div><a class="u-url" href="/projects/2022/11/17/DeepAutoencoder.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ilana Zane</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ilana Zane</li><li><a class="u-email" href="mailto:ilanazane@comcast.net">ilanazane@comcast.net</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ilanazane"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ilanazane</span></a></li><li><a href="https://instagram.com/lanadelzane"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">lanadelzane</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A blog about AI and other interests </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

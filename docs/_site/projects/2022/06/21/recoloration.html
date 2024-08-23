@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Recoloring Black and White Images with a CNN | Ilana Zane</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Recoloring Black and White Images with a CNN" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intro" />
+<meta property="og:description" content="Intro" />
+<link rel="canonical" href="http://localhost:4000/projects/2022/06/21/recoloration.html" />
+<meta property="og:url" content="http://localhost:4000/projects/2022/06/21/recoloration.html" />
+<meta property="og:site_name" content="Ilana Zane" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-06-21T13:15:36-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Recoloring Black and White Images with a CNN" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-06-21T13:15:36-04:00","datePublished":"2022-06-21T13:15:36-04:00","description":"Intro","headline":"Recoloring Black and White Images with a CNN","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/2022/06/21/recoloration.html"},"url":"http://localhost:4000/projects/2022/06/21/recoloration.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Ilana Zane" /><meta name="google-site-verification" content="-U80l7j-jWyXzli0lOaeIKs8E0K3Rs2hUzeXIwJeoaw" />
+  </head>
+
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script><body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/">Ilana Zane</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a><a class="page-link" href="/research/">Research</a></div>
+        </nav><img src="/assets/images/banner.png"/>
+    </div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Recoloring Black and White Images with a CNN</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2022-06-21T13:15:36-04:00" itemprop="datePublished">Jun 21, 2022
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="intro">Intro</h1>
+
+<p>A few years ago, my uncle decided to take old photos of my grandparents that were stored in a box and scan them so we could have digital copies for safekeeping. Naturally, I thought it would be cool if we could also have colored versions of them as well, but that’s a complicated process. I can imagine that in order to do that you need to know how to use photoshop well (my photoshop skills are a bit limited) and actually understand some color theory and a bit of history in order to make the images realistic and as accurate as possible. So, as a computer scientist my next thought was to use a neural network 
+to do the job for me and better yet use it as a final project for my Intro to AI course. I actually did a second iteration of this project a few years later.</p>
+
+<h1 id="first-version">First Version</h1>
+
+<p>The first version of the project required taking a colored photo and splitting it in half so that one side was still colored and the other side was black and white. Then, my group and I used k-means clustering in order to pick out the <em>n</em> most prominent colors and using those to recolor the black and white half. Here are the results:</p>
+
+<p><em>insert k-means photo here</em></p>
+
+<h1 id="second-version">Second Version</h1>
+
+<p>Since the results weren’t <em>amazing</em> from the first part,  we then moved onto using a basic neural network. We had kind of figured that the k-means wouldn’t be the best algorithm to use, but it was a good starting point. The neural network we used had only three layers and we calculated all of the weight derivatives by hand. This was my very frst time using a neural network and coding one from scratch– it was a tedious process, but it was needed to finally clear up any misunderstandings or confusion I had around neural networks. Here are the results from that neural network:</p>
+
+<p><em>insert NN photo here</em></p>
+
+<h2 id="side-note-up-until-that-point-i-had-watched-so-many-youtube-videos-on-neural-networks-an-especially-good-one-from-3blue1brown-but-there-was-always-some-confusion-as-to-how-they-actually-worked-the-only-way-to-clear-up-that-fogginess-was-to-all-of-the-calculus-by-hand-it-was-hard-to-appreciate-the-learning-experience-in-the-moment-but-it-was-totally-necessary">Side note: up until that point I had watched so many youtube videos on neural networks (an especially good one from 3Blue1Brown) but there was always some confusion as to how they <em>actually</em> worked. The only way to clear up that fogginess was to all of the calculus by hand. It was hard to appreciate the learning experience in the moment, but it was totally necessary.</h2>
+
+<h1 id="third-version">Third Version</h1>
+
+<p>Okay, so fast forward like two years later and I have to do a final project for my Pattern Recognition and Classification (AAI 646) course in grad school. My professors only instructions were to create a project using any of the machine learning algorithms we had learned over the course of the semester… so pretty broad. I decided that this would be the perfect opportunity to revist my black and white image recoloring project, because although I had completed it, there was <em>a</em> <em>lot</em> of room for improvement.</p>
+
+<p>I worked on this project by myself for almost a month and created a new and improved version that used a Convolutional Neural Network (CNN) to recolor the images.</p>
+
+<p><em>Insert photos</em></p>
+<h2 id="model">Model</h2>
+
+<p>The CNN consisted of 12 convolutional layers using Tensorflow and Keras that took images of size 256 pixels x 256 pixles as input. In order to extract features I had the model use a kernel size of 3x3 and a stride of 2– i.e the images are analyzed by a 3x3 window to see only nine pixels of the image at a time and the stride parameter dictated that the window moved by 2 pixels each time. At the end of this process though I was left with an image that was about half the height and width of the original image. To counteract this I had an upsampling layer at the end of the model in order to increase the dimensions of the image to what it originall was to prevent loss of information.</p>
+
+<div class="post-categories">
+  
+  
+  <a href="/categories/#Projects">Projects</a>
+  
+  
+</div>
+
+
+  </div><a class="u-url" href="/projects/2022/06/21/recoloration.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ilana Zane</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ilana Zane</li><li><a class="u-email" href="mailto:ilanazane@comcast.net">ilanazane@comcast.net</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ilanazane"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ilanazane</span></a></li><li><a href="https://instagram.com/lanadelzane"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">lanadelzane</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A blog about AI and other interests </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

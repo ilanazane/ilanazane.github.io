@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>NASDAQ Total View | Ilana Zane</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="NASDAQ Total View" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="```python" />
+<meta property="og:description" content="```python" />
+<link rel="canonical" href="http://localhost:4000/2024/02/19/NASDAQTotalView.html" />
+<meta property="og:url" content="http://localhost:4000/2024/02/19/NASDAQTotalView.html" />
+<meta property="og:site_name" content="Ilana Zane" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-02-19T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="NASDAQ Total View" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-19T00:00:00-05:00","datePublished":"2024-02-19T00:00:00-05:00","description":"```python","headline":"NASDAQ Total View","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/02/19/NASDAQTotalView.html"},"url":"http://localhost:4000/2024/02/19/NASDAQTotalView.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Ilana Zane" /><meta name="google-site-verification" content="-U80l7j-jWyXzli0lOaeIKs8E0K3Rs2hUzeXIwJeoaw" />
+  </head>
+
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script><body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/">Ilana Zane</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a><a class="page-link" href="/research/">Research</a></div>
+        </nav><img src="/assets/images/banner.png"/>
+    </div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">NASDAQ Total View</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-02-19T00:00:00-05:00" itemprop="datePublished">Feb 19, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">tqdm</span>
+<span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pytables</span>
+
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="n">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span> 
+
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span> 
+<span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
+<span class="kn">import</span> <span class="n">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span> 
+<span class="kn">import</span> <span class="n">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nasdaq_path</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="sh">'</span><span class="s">nasdaq100</span><span class="sh">'</span><span class="p">)</span>
+<span class="c1"># list(nasdaq_path.iterdir())
+</span></code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tcols</span> <span class="o">=</span> <span class="p">[</span><span class="sh">'</span><span class="s">openbartime</span><span class="sh">'</span><span class="p">,</span>
+         <span class="sh">'</span><span class="s">firsttradetime</span><span class="sh">'</span><span class="p">,</span>
+         <span class="sh">'</span><span class="s">highbidtime</span><span class="sh">'</span><span class="p">,</span>
+         <span class="sh">'</span><span class="s">highasktime</span><span class="sh">'</span><span class="p">,</span>
+         <span class="sh">'</span><span class="s">hightradetime</span><span class="sh">'</span><span class="p">,</span>
+         <span class="sh">'</span><span class="s">lowbidtime</span><span class="sh">'</span><span class="p">,</span>
+         <span class="sh">'</span><span class="s">lowasktime</span><span class="sh">'</span><span class="p">,</span>
+         <span class="sh">'</span><span class="s">lowtradetime</span><span class="sh">'</span><span class="p">,</span>
+         <span class="sh">'</span><span class="s">closebartime</span><span class="sh">'</span><span class="p">,</span>
+         <span class="sh">'</span><span class="s">lasttradetime</span><span class="sh">'</span><span class="p">]</span>
+
+<span class="n">drop_cols</span> <span class="o">=</span> <span class="p">[</span><span class="sh">'</span><span class="s">unknowntickvolume</span><span class="sh">'</span><span class="p">,</span>
+             <span class="sh">'</span><span class="s">cancelsize</span><span class="sh">'</span><span class="p">,</span>
+             <span class="sh">'</span><span class="s">tradeatcrossorlocked</span><span class="sh">'</span><span class="p">]</span>
+
+<span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="sh">'</span><span class="s">volumeweightprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">price</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">finravolume</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fvolume</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">finravolumeweightprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">fprice</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">uptickvolume</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">up</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">downtickvolume</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">down</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">repeatuptickvolume</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">rup</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">repeatdowntickvolume</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">rdown</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">firsttradeprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">first</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">hightradeprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">high</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">lowtradeprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">low</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">lasttradeprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">last</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">nbboquotecount</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">nbbo</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">totaltrades</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">ntrades</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">openbidprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">obprice</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">openbidsize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">obsize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">openaskprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">oaprice</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">openasksize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">oasize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">highbidprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">hbprice</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">highbidsize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">hbsize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">highaskprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">haprice</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">highasksize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">hasize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">lowbidprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">lbprice</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">lowbidsize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">lbsize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">lowaskprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">laprice</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">lowasksize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">lasize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">closebidprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">cbprice</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">closebidsize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">cbsize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">closeaskprice</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">caprice</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">closeasksize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">casize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">firsttradesize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">firstsize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">hightradesize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">highsize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">lowtradesize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">lowsize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">lasttradesize</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">lastsize</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">tradetomidvolweight</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">volweight</span><span class="sh">'</span><span class="p">,</span>
+           <span class="sh">'</span><span class="s">tradetomidvolweightrelative</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">volweightrel</span><span class="sh">'</span><span class="p">}</span>
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">path</span> <span class="o">=</span> <span class="n">nasdaq_path</span><span class="o">/</span> <span class="sh">'</span><span class="s">1min_taq</span><span class="sh">'</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">.</span><span class="nf">exists</span><span class="p">():</span>
+    <span class="n">path</span><span class="p">.</span><span class="nf">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span> 
+    
+<span class="c1"># read files and create progress bar
+</span><span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nf">tqdm</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">nasdaq_path</span><span class="p">.</span><span class="nf">glob</span><span class="p">(</span><span class="sh">'</span><span class="s">*/**/*.csv.gz</span><span class="sh">'</span><span class="p">))):</span>
+    <span class="n">data</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="nf">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[[</span><span class="sh">'</span><span class="s">Date</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">TimeBarStart</span><span class="sh">'</span><span class="p">]])</span>
+                    <span class="p">.</span><span class="nf">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">str</span><span class="p">.</span><span class="n">lower</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">drop</span><span class="p">(</span><span class="n">tcols</span> <span class="o">+</span> <span class="n">drop_cols</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">set_index</span><span class="p">(</span><span class="sh">'</span><span class="s">date_timebarstart</span><span class="sh">'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">sort_index</span><span class="p">()</span>
+                    <span class="p">.</span><span class="nf">between_time</span><span class="p">(</span><span class="sh">'</span><span class="s">9:30</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">16:00</span><span class="sh">'</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">set_index</span><span class="p">(</span><span class="sh">'</span><span class="s">ticker</span><span class="sh">'</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                    <span class="p">.</span><span class="nf">swaplevel</span><span class="p">()</span>
+                    <span class="p">.</span><span class="nf">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s">tradeat</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">at</span><span class="sh">'</span><span class="p">)))</span>
+    
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">(</span><span class="n">data</span><span class="p">).</span><span class="nf">apply</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">downcast</span><span class="o">=</span><span class="sh">'</span><span class="s">integer</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">data</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="nf">rename</span><span class="p">([</span><span class="sh">'</span><span class="s">ticker</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">date_time</span><span class="sh">'</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="n">show_counts</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+<span class="n">data</span><span class="p">.</span><span class="nf">to_hdf</span><span class="p">(</span><span class="n">nasdaq_path</span> <span class="o">/</span> <span class="sh">'</span><span class="s">algoseek.h5</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">min_taq</span><span class="sh">'</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="nf">info</span><span class="p">(</span><span class="n">null_counts</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">len</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="nf">unique</span><span class="p">(</span><span class="sh">'</span><span class="s">ticker</span><span class="sh">'</span><span class="p">))</span>
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">constituents</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="nf">groupby</span><span class="p">([</span><span class="n">data</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="nf">get_level_values</span><span class="p">(</span><span class="sh">'</span><span class="s">date_time</span><span class="sh">'</span><span class="p">).</span><span class="n">date</span><span class="p">,</span> <span class="sh">'</span><span class="s">ticker</span><span class="sh">'</span><span class="p">])</span>
+                <span class="p">.</span><span class="nf">size</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">unstack</span><span class="p">(</span><span class="sh">'</span><span class="s">ticker</span><span class="sh">'</span><span class="p">)</span>
+                <span class="p">.</span><span class="nf">notnull</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                <span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">nan</span><span class="p">))</span>
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">constituents</span><span class="p">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">to_datetime</span><span class="p">(</span><span class="n">constituents</span><span class="p">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">constituents</span> <span class="o">=</span> <span class="n">constituents</span><span class="p">.</span><span class="nf">resample</span><span class="p">(</span><span class="sh">'</span><span class="s">M</span><span class="sh">'</span><span class="p">).</span><span class="nf">max</span><span class="p">()</span>
+<span class="n">constituents</span><span class="p">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">constituents</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">date</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="nf">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">constituents</span><span class="p">.</span><span class="n">T</span><span class="p">.</span><span class="nf">isnull</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="p">.</span><span class="nf">heatmap</span><span class="p">(</span><span class="n">constituents</span><span class="p">.</span><span class="n">T</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="sh">'</span><span class="s">Blues_r</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nf">set_ylabel</span><span class="p">(</span><span class="sh">''</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="nf">suptitle</span><span class="p">(</span><span class="sh">'</span><span class="s">NASDAQ100 Constituents (2015)</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">.</span><span class="nf">tight_layout</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/images/NASDAQTOtalView_files/myimg.png" alt="image" width="3000" /></p>
+
+  </div><a class="u-url" href="/2024/02/19/NASDAQTotalView.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ilana Zane</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ilana Zane</li><li><a class="u-email" href="mailto:ilanazane@comcast.net">ilanazane@comcast.net</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ilanazane"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ilanazane</span></a></li><li><a href="https://instagram.com/lanadelzane"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">lanadelzane</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A blog about AI and other interests </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
