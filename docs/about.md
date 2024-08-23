@@ -25,6 +25,8 @@ div.box {
 Python, Java, R, C, C++, MATLAB, React, SQL<br>
 <h4><mark style="background: #F6E4F9!important">Libraries</mark></h4>
 NumPy, TensorFlow, Matplotlib, scikit-learn, Pytorch, seaborn, PySpark, Simulink<br><br>
+<h4><mark style="background: #F6E4F9!important">Machine Learning Techniques</mark></h4>
+GPT-2, LangChain, RAG, QuartzNet, Natural Language Processing, K-Nearest Neighbors, CNNs, SVMs, Autoencoders<br><br>
 
 
 <i class="fa fa-download"></i>You can download my [resume]({{ site.url }}/assets/Zane_Resume.pdf) here.
