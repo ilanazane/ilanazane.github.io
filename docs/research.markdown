@@ -7,28 +7,32 @@ order: 2
 
 These are some of mmy favorite projects that I have completed throughout grad school:
 
-[Sentence Autocompletion with an RNN](#proj1) <br>
-[Generating Jazz Solos with an RNN](#proj2) <br>
-[Building a Mobile System for a Robotic Arm](#proj3) <br>
-[Recoloring Black and White Images using a CNN](#proj4) <br>
+[Building a Mobile System for a Robotic Arm](#proj1) <br>
+[SLAM Algorithm Comparison with Ouster LiDAR](#proj2) <br>
+[Sentence Autocompletion with GRU-Based RNN](#proj3) <br>
+[Jazz Solo Generation using LSTM-RNN](#proj4) <br>
+[Recoloring Black and White Images with a CNN](#proj5) <br>
 
-All of these papers can be found on my GitHub with their code. Project #3 was a part of the "Special Problems in AI" course which was mandatory for my degree. The others are final projects from my classes in: Pattern Recognition and Classification, Deep Learning, and Applied Machine Learning. 
+All of these papers can be found on my GitHub with their code. 
 
 <div id="proj1"></div>
-<h2>Sentence Autocompletion with GRU-Based RNN<h2> 
-<object data="/assets/SentencePaper.pdf" width="700" height="700" type='application/pdf'></object>
-
+<h2>Building a Mobile System for a Robotic Arm<h2>
+<object data="/assets/papers/800_FinalPaper.pdf" width="700" height="700" type='application/pdf'></object>
 
 <div id="proj2"></div>
-<h2>Jazz Solo Generation using LSTM-RNN<h2>
-<object data="/assets/Jazz.pdf" width="700" height="700" type='application/pdf'></object>
-
+<h2>SLAM Algorithm Comparison with Ouster LiDA<h2> 
+<object data="/assets/papers/SMARTLab.pdf" width="700" height="700" type='application/pdf'></object>
 
 <div id="proj3"></div>
-<h2>Creating a System for a Trossen Robotic Arm<h2>
-<object data="/assets/800_FinalPaper.pdf" width="700" height="700" type='application/pdf'></object>
+<h2>Sentence Autocompletion with GRU-Based RNN<h2> 
+<object data="/assets/papers/SentencePaper.pdf" width="700" height="700" type='application/pdf'></object>
 
 
 <div id="proj4"></div>
+<h2>Jazz Solo Generation using LSTM-RNN<h2>
+<object data="/assets/papers/Jazz.pdf" width="700" height="700" type='application/pdf'></object>
+
+
+<div id="proj5"></div>
 <h2>Recoloring Black and White Images with a CNN<h2>
-<object data="/assets/646FinalReport.pdf" width="700" height="700" type='application/pdf'></object>
+<object data="/assets/papers/646FinalReport.pdf" width="700" height="700" type='application/pdf'></object>
