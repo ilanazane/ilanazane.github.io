@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Stock Prediction and Anomoly Detection "
+title: "Stock Prediction and Anomoly Detection 📈 "
 date: 2024-11-07
 categories: Projects
 ---
@@ -133,5 +133,5 @@ plt.show()
 
 ![image]({{site.url}}/assets/images/stock_price_prediction/Figure_3.png)
 
-This project can be furthr extended by using machine learning models for more complex forecasting or anomoly detection tasks. 
+This project can be further extended by using machine learning models for more complex forecasting or anomoly detection tasks. 
 
