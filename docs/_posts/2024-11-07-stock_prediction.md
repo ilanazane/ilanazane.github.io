@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Stock Prediction and Anomoly Detection 📈 "
+title: "Stock Prediction and Anomaly Detection 📈 "
 date: 2024-11-07
 categories: Projects
 ---
@@ -81,22 +81,22 @@ Plotting the moving averages helps to understand general trends and smooth out n
 
 
 # Part 3. Simple Anonomly Detection 
-I will define an anomoly as a day when the stock prices deviates significantly from the 20-day moving average. Any price that is more than two standard deviations away is flagged as an anomoly. 
+I will define an anomaly as a day when the stock prices deviates significantly from the 20-day moving average. Any price that is more than two standard deviations away is flagged as an anomaly. 
 
 ```python 
 # calculate the rolling standard deviation 
 data["20_STD"] = data["Close"].rolling(window=20).std()
 
-# anomolies will be prices that are more than 2 std from the ma
-data["Anomoly"] = np.where((data["Close"] > data["20_MA"] + 2 * data["20_STD"])|
+# anomalies will be prices that are more than 2 std from the ma
+data["Anomaly"] = np.where((data["Close"] > data["20_MA"] + 2 * data["20_STD"])|
                            (data["Close"] < data["20_MA"] - 2 * data["20_STD"]),True,False)
 
-# plot anomolies 
+# plot anomalies 
 plt.figure(figsize=(14,7))
 plt.plot(data["Close"], label='Close Price', color = 'blue')
 plt.plot(data["20_MA"],label = "20 day MA", color = "orange")
-plt.scatter(data[data["Anomoly"]].index,data[data["Anomoly"]]["Close"],color="red")
-plt.title(f"{ticker} Stock Price with Anomolies")
+plt.scatter(data[data["Anomaly"]].index,data[data["Anomaly"]]["Close"],color="red")
+plt.title(f"{ticker} Stock Price with Anomalies")
 plt.xlabel("Date")
 plt.ylabel("Price")
 plt.legend()
@@ -133,5 +133,5 @@ plt.show()
 
 ![image]({{site.url}}/assets/images/stock_price_prediction/Figure_3.png)
 
-This project can be further extended by using machine learning models for more complex forecasting or anomoly detection tasks. 
+This project can be further extended by using machine learning models for more complex forecasting or anomaly detection tasks. 
 
