@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Multinomial Naive Bayes for Text Classification | Ilana Zane</title>
+<meta name="generator" content="Jekyll v4.3.3" />
+<meta property="og:title" content="Multinomial Naive Bayes for Text Classification" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In this project I implement a Multinomial Naive Bayes model to classify text data. Multinomial Naive Bayes works well for the following reasons:" />
+<meta property="og:description" content="In this project I implement a Multinomial Naive Bayes model to classify text data. Multinomial Naive Bayes works well for the following reasons:" />
+<link rel="canonical" href="http://localhost:4000/projects/2024/11/20/mnb_text_classifcation.html" />
+<meta property="og:url" content="http://localhost:4000/projects/2024/11/20/mnb_text_classifcation.html" />
+<meta property="og:site_name" content="Ilana Zane" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-11-20T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Multinomial Naive Bayes for Text Classification" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-11-20T00:00:00-05:00","datePublished":"2024-11-20T00:00:00-05:00","description":"In this project I implement a Multinomial Naive Bayes model to classify text data. Multinomial Naive Bayes works well for the following reasons:","headline":"Multinomial Naive Bayes for Text Classification","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/projects/2024/11/20/mnb_text_classifcation.html"},"url":"http://localhost:4000/projects/2024/11/20/mnb_text_classifcation.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Ilana Zane" /><meta name="google-site-verification" content="-U80l7j-jWyXzli0lOaeIKs8E0K3Rs2hUzeXIwJeoaw" />
+  </head>
+
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script><body><header class="site-header" role="banner">
+
+    <div class="wrapper"><a class="site-title" rel="author" href="/">Ilana Zane</a><nav class="site-nav">
+          <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+          <label for="nav-trigger">
+            <span class="menu-icon">
+              <svg viewBox="0 0 18 15" width="18px" height="15px">
+                <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+              </svg>
+            </span>
+          </label>
+  
+          <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/categories/">Categories</a><a class="page-link" href="/research/">Research</a></div>
+        </nav><!-- <img src="/assets/images/banner2.png"/> -->
+    </div>
+  </header>
+  <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Multinomial Naive Bayes for Text Classification  </h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-11-20T00:00:00-05:00" itemprop="datePublished">Nov 20, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>In  this project I implement a Multinomial Naive Bayes model to classify text data. Multinomial Naive Bayes works well for the following reasons:</p>
+
+<ul>
+  <li>Handles high-dimensional data</li>
+  <li>Robust to small datasets</li>
+  <li>Fast training and prediction</li>
+  <li>Works well for sparse data</li>
+  <li>Is an interpretable model</li>
+</ul>
+
+<h3 id="import-statements">Import Statements</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">spacy</span>
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span> 
+<span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="n">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="n">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">MultinomialNB</span>
+<span class="kn">from</span> <span class="n">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">label_binarize</span>
+<span class="kn">from</span> <span class="n">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="n">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="kn">from</span> <span class="n">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">ConfusionMatrixDisplay</span>
+<span class="kn">from</span> <span class="n">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span><span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
+</code></pre></div></div>
+
+<p>I use this <a href="http://mlg.ucd.ie/datasets/bbc.html"> dataset </a></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># python -m spacy download en_core_web_sm
+</span><span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="sh">"</span><span class="s">en_core_web_sm</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="note">Note:</h3>
+<p>Arrays are homogeneous (all elements are of the same type) while lists are heterogeneous(elements can be diifferent)</p>
+
+<p>Arrays have a fixed size, whereas lists are dynamic</p>
+
+<p>Lists in python have more built in funtions</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># documents come in 5 folders, put them all together into one list 
+</span><span class="n">files</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="nc">Path</span><span class="p">(</span><span class="sh">'</span><span class="s">bbc</span><span class="sh">'</span><span class="p">).</span><span class="nf">glob</span><span class="p">(</span><span class="sh">'</span><span class="s">**/*.txt</span><span class="sh">'</span><span class="p">)))</span>
+<span class="n">doc_list</span> <span class="o">=</span> <span class="p">[]</span> 
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="nb">file</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="c1"># get folder name
+</span>    <span class="n">topic</span> <span class="o">=</span> <span class="nb">file</span><span class="p">.</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">article</span> <span class="o">=</span> <span class="nb">file</span><span class="p">.</span><span class="nf">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="sh">'</span><span class="s">latin1</span><span class="sh">'</span><span class="p">).</span><span class="nf">split</span><span class="p">(</span><span class="sh">'</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span>
+    <span class="n">heading</span> <span class="o">=</span> <span class="n">article</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nf">strip</span><span class="p">()</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="sh">'</span><span class="s"> </span><span class="sh">'</span><span class="p">.</span><span class="nf">join</span><span class="p">([</span><span class="n">l</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">article</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
+    <span class="n">doc_list</span><span class="p">.</span><span class="nf">append</span><span class="p">([</span><span class="n">topic</span><span class="p">,</span> <span class="n">heading</span><span class="p">,</span> <span class="n">body</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># create dataframe 
+</span><span class="n">docs</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nc">DataFrame</span><span class="p">(</span><span class="n">doc_list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sh">'</span><span class="s">topic</span><span class="sh">'</span><span class="p">,</span><span class="sh">'</span><span class="s">heading</span><span class="sh">'</span><span class="p">,</span><span class="sh">'</span><span class="s">body</span><span class="sh">'</span><span class="p">])</span>
+<span class="n">docs</span><span class="p">.</span><span class="nf">info</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 2225 entries, 0 to 2224
+Data columns (total 3 columns):
+ #   Column   Non-Null Count  Dtype 
+---  ------   --------------  ----- 
+ 0   topic    2225 non-null   object
+ 1   heading  2225 non-null   object
+ 2   body     2225 non-null   object
+dtypes: object(3)
+memory usage: 52.3+ KB
+</code></pre></div></div>
+
+<p>Here is a look into the data:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docs</span><span class="p">.</span><span class="nf">sample</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>topic</th>
+      <th>heading</th>
+      <th>body</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1123</th>
+      <td>politics</td>
+      <td>Labour pig poster 'anti-Semitic'</td>
+      <td>The Labour Party has been accused of anti-Sem...</td>
+    </tr>
+    <tr>
+      <th>325</th>
+      <td>business</td>
+      <td>Senior Fannie Mae bosses resign</td>
+      <td>The two most senior executives at US mortgage...</td>
+    </tr>
+    <tr>
+      <th>1500</th>
+      <td>sport</td>
+      <td>Campbell lifts lid on United feud</td>
+      <td>Arsenal's Sol Campbell has called the rivalry...</td>
+    </tr>
+    <tr>
+      <th>1454</th>
+      <td>sport</td>
+      <td>Owen determined to stay in Madrid</td>
+      <td>England forward Michael Owen has told the BBC...</td>
+    </tr>
+    <tr>
+      <th>1298</th>
+      <td>politics</td>
+      <td>Voters 'don't trust politicians'</td>
+      <td>Eight out of 10 voters do not trust politicia...</td>
+    </tr>
+    <tr>
+      <th>1633</th>
+      <td>sport</td>
+      <td>Woodward eyes Brennan for Lions</td>
+      <td>Toulouse's former Irish international Trevor ...</td>
+    </tr>
+    <tr>
+      <th>1006</th>
+      <td>politics</td>
+      <td>Kilroy launches 'Veritas' party</td>
+      <td>Ex-BBC chat show host and East Midlands MEP R...</td>
+    </tr>
+    <tr>
+      <th>1972</th>
+      <td>tech</td>
+      <td>Microsoft gets the blogging bug</td>
+      <td>Software giant Microsoft is taking the plunge...</td>
+    </tr>
+    <tr>
+      <th>302</th>
+      <td>business</td>
+      <td>Brazil plays down Varig rescue</td>
+      <td>The Brazilian government has played down clai...</td>
+    </tr>
+    <tr>
+      <th>454</th>
+      <td>business</td>
+      <td>Qantas considers offshore option</td>
+      <td>Australian airline Qantas could transfer as m...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>We are going to classify articles based on these five categories:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docs</span><span class="p">.</span><span class="n">topic</span><span class="p">.</span><span class="nf">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="bp">True</span><span class="p">).</span><span class="nf">to_frame</span><span class="p">(</span><span class="sh">'</span><span class="s">count</span><span class="sh">'</span><span class="p">).</span><span class="n">style</span><span class="p">.</span><span class="nf">format</span><span class="p">({</span><span class="sh">'</span><span class="s">count</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">{:,.2%}</span><span class="sh">'</span><span class="p">.</span><span class="nb">format</span><span class="p">})</span>
+</code></pre></div></div>
+
+<style type="text/css">
+</style>
+
+<table id="T_479be">
+  <thead>
+    <tr>
+      <th class="blank level0">&nbsp;</th>
+      <th id="T_479be_level0_col0" class="col_heading level0 col0">count</th>
+    </tr>
+    <tr>
+      <th class="index_name level0">topic</th>
+      <th class="blank col0">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_479be_level0_row0" class="row_heading level0 row0">sport</th>
+      <td id="T_479be_row0_col0" class="data row0 col0">22.97%</td>
+    </tr>
+    <tr>
+      <th id="T_479be_level0_row1" class="row_heading level0 row1">business</th>
+      <td id="T_479be_row1_col0" class="data row1 col0">22.92%</td>
+    </tr>
+    <tr>
+      <th id="T_479be_level0_row2" class="row_heading level0 row2">politics</th>
+      <td id="T_479be_row2_col0" class="data row2 col0">18.74%</td>
+    </tr>
+    <tr>
+      <th id="T_479be_level0_row3" class="row_heading level0 row3">tech</th>
+      <td id="T_479be_row3_col0" class="data row3 col0">18.02%</td>
+    </tr>
+    <tr>
+      <th id="T_479be_level0_row4" class="row_heading level0 row4">entertainment</th>
+      <td id="T_479be_row4_col0" class="data row4 col0">17.35%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The parameter  <code class="language-plaintext highlighter-rouge">stratify = y</code> ensures that when the data is split into training and testing sets, the proportion of classes is preserved.</p>
+
+<p>Without <code class="language-plaintext highlighter-rouge">stratify = y</code> there may be an unbalanced distributiion of classes between training and testing sets, especially if some classes are less frequent in the original dataset.</p>
+
+<p>With <code class="language-plaintext highlighter-rouge">stratify = y</code> the splot respected the distribution of the different classes in the dataset.</p>
+
+<p>For example, if topic 1 represents 20% of the original dataset, it will also represent approximately 20% of both the training and testing sets.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># classify news articles
+</span>
+<span class="c1"># create integer class values
+</span><span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">factorize</span><span class="p">(</span><span class="n">docs</span><span class="p">.</span><span class="n">topic</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">docs</span><span class="p">.</span><span class="n">body</span> 
+<span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="nf">train_test_split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="vectorize-text-data">Vectorize Text Data</h3>
+
+<p><code class="language-plaintext highlighter-rouge">CountVectorizer()</code> converts a collection of text documents into a matrix of token/word counts. First the data is tokenized by being split into individual words. Then, a vocabulary of unique tokens across the entire corpus is built. Finally, a word count matrix is created where each row corresponds to a document and each column corresponds to the count of a unique word in the vocabulary.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">vectorizer</span> <span class="o">=</span> <span class="nc">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">x_train_dtm</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="p">.</span><span class="nf">fit_transform</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+<span class="n">x_test_dtm</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="p">.</span><span class="nf">transform</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_train_dtm</span><span class="p">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">x_test_dtm</span><span class="p">.</span><span class="n">shape</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>((1668, 25951), (557, 25951))
+</code></pre></div></div>
+
+<h3 id="train-multi-class-naive-bayes-model">Train Multi-Class Naive Bayes Model</h3>
+
+<p>Naive Bayes is based on Bayes Theorem:</p>
+
+<p>First equation is here \({P(C|X) = \frac{P(X∣C)P(C)}{P(X)}}\)</p>
+
+<p>where C is the class and X is the feature.</p>
+
+<p>Some limitations are its <strong>feature independence assumption</strong> and its <strong>zero frequency problem</strong>. There is a strong assumption that features are condiditionally independent which does not always hold, depending on the data. Also, if a class has a zero probability for a given feature, the entire product becomes zero.</p>
+
+<p>Multinomial naive bayes handles frequency based features, making it effective for text classification when the number of times a word appears in an article is meaningful.</p>
+
+<p>My one concern while building this was that stop words would be frequent enough across all documents to influence the classification of topics. However, stop words are generally not topic-specific and do not provide much discriiminatory power between the classes. For example, the word “the” can appear in articles about both sports and politics.</p>
+
+<p>Naive Bayes is robust in this nature– it naturall down weights stop words because of its probablistic nature. Stop words, being common across all classes, will have siimilar probabilities for all classes <em>((P(word|class))</em>. Thus, these words have limited impact on the overall classification decision</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nb</span> <span class="o">=</span> <span class="nc">MultinomialNB</span><span class="p">()</span>
+<span class="n">nb</span><span class="p">.</span><span class="nf">fit</span><span class="p">(</span><span class="n">x_train_dtm</span><span class="p">,</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">y_pred_class</span> <span class="o">=</span> <span class="n">nb</span><span class="p">.</span><span class="nf">predict</span><span class="p">(</span><span class="n">x_test_dtm</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">score</span> <span class="o">=</span> <span class="nf">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_class</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0.9712746858168761
+</code></pre></div></div>
+
+<p>Our model produces an accuracy score of 97% – pretty good!</p>
+
+<h3 id="create-and-plot-confusion-matrix">Create and plot confusion matrix</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># calculate the confusion matrix
+</span><span class="n">cm</span> <span class="o">=</span> <span class="nf">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_class</span><span class="p">)</span>
+
+<span class="c1"># display the confusion matrix as a heatmap
+</span><span class="n">disp</span> <span class="o">=</span> <span class="nc">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">display_labels</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="nf">unique</span><span class="p">(</span><span class="n">y_test</span><span class="p">))</span>
+<span class="n">disp</span><span class="p">.</span><span class="nf">plot</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="sh">'</span><span class="s">Blues</span><span class="sh">'</span><span class="p">,</span> <span class="n">xticks_rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+
+<span class="c1"># customize plot
+</span><span class="n">plt</span><span class="p">.</span><span class="nf">title</span><span class="p">(</span><span class="sh">"</span><span class="s">Confusion Matrix</span><span class="sh">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">xlabel</span><span class="p">(</span><span class="sh">"</span><span class="s">Predicted Labels</span><span class="sh">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">ylabel</span><span class="p">(</span><span class="sh">"</span><span class="s">True Labels</span><span class="sh">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">grid</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/images/mnb_text_classifcation_files/mnb_text_classifcation_22_0.png" alt="image" /></p>
+
+<h3 id="create-roc-plot-for-all-classes">Create ROC plot for all classes</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y_pred_probs</span> <span class="o">=</span> <span class="n">nb</span><span class="p">.</span><span class="nf">predict_proba</span><span class="p">(</span><span class="n">x_test_dtm</span><span class="p">)</span>
+<span class="c1"># create binary labels for class 0
+</span><span class="n">y_test_binary</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_test</span> <span class="o">==</span> <span class="mi">0</span><span class="p">).</span><span class="nf">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>   
+<span class="c1"># probabilities for class 0
+</span><span class="n">y_pred_probs_class0</span> <span class="o">=</span> <span class="n">y_pred_probs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>     
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># get the unique class labels
+</span><span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">unique</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>  
+<span class="n">n_classes</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
+
+<span class="c1"># binarize the output for multi-class ROC
+</span><span class="n">y_test_binarized</span> <span class="o">=</span> <span class="nf">label_binarize</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">)</span>
+
+<span class="c1"># initialize plot
+</span><span class="n">plt</span><span class="p">.</span><span class="nf">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">cm</span><span class="p">.</span><span class="nf">get_cmap</span><span class="p">(</span><span class="sh">'</span><span class="s">tab10</span><span class="sh">'</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+
+<span class="c1"># plot ROC for each class
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">n_classes</span><span class="p">):</span>
+    <span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nf">roc_curve</span><span class="p">(</span><span class="n">y_test_binarized</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">y_pred_probs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+    <span class="n">roc_auc</span> <span class="o">=</span> <span class="nf">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="nf">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="sh">"</span><span class="s">Class </span><span class="si">{</span><span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s"> (AUC = </span><span class="si">{</span><span class="n">roc_auc</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">)</span><span class="sh">"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="nf">colors</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+<span class="c1"># ddd diagonal reference line
+</span><span class="n">plt</span><span class="p">.</span><span class="nf">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="sh">'</span><span class="s">k--</span><span class="sh">'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sh">"</span><span class="s">Random Guessing</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="c1"># plot settings
+</span><span class="n">plt</span><span class="p">.</span><span class="nf">title</span><span class="p">(</span><span class="sh">"</span><span class="s">One-vs-Rest ROC Curves</span><span class="sh">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">xlabel</span><span class="p">(</span><span class="sh">"</span><span class="s">False Positive Rate</span><span class="sh">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">ylabel</span><span class="p">(</span><span class="sh">"</span><span class="s">True Positive Rate</span><span class="sh">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="sh">"</span><span class="s">lower right</span><span class="sh">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/images/mnb_text_classifcation_files/mnb_text_classifcation_25_1.png" alt="image" /></p>
+
+<p>ROC curves look good!</p>
+
+  </div><a class="u-url" href="/projects/2024/11/20/mnb_text_classifcation.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ilana Zane</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ilana Zane</li><li><a class="u-email" href="mailto:ilanazane@comcast.net">ilanazane@comcast.net</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ilanazane"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ilanazane</span></a></li><li><a href="https://instagram.com/lanadelzane"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">lanadelzane</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A blog about AI and other interests </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
