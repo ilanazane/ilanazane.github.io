@@ -1184,7 +1184,6 @@ graph.view()
 
 So we can see that the relative strength index is the most important feature in the dataset. 
 
-The diagram below shows how the model uses different features and indicates the split rules for all features. Under the label value for each node, the diagram shows the number of samples that were used and the number of samples from each class, where value = [x,y] corresponds to -1,1. In the last line of the node, the class value shows teh most common class. 
 
 ![image]({{site.url}}/assets/images/random_forest_classifier_files/decision tree.png)
 
